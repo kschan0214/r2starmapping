@@ -21,7 +21,7 @@
 % Date created: 7 October, 2016
 % Date last modified: 29 June 2017
 %
-function [r2s, t2s, m0] = R2star_ARLO_mag(img,te,m0mode)
+function [r2s, t2s, s0] = R2star_ARLO_mag(img,te,s0mode)
 
 % set range of R2* and T2*
 minT2s = min(te)/20;
@@ -31,7 +31,7 @@ ranger2s = [1/maxT2s, 1/minT2s];
 
 % set m0 extrapolation method
 if nargin < 3
-    m0mode = 'default';
+    s0mode = '1stecho';
 end
 
 % disgard phase information
@@ -49,8 +49,8 @@ r2s = 1./t2s;
 t2s = SetImgRange(t2s,ranget2s);
 r2s = SetImgRange(r2s,ranger2s);
 
-% calculate m0
-m0 = ComputeM0GivenR2star(r2s,te,img,m0mode);
+% calculate s0
+s0 = ComputeM0GivenR2star(r2s,te,img,s0mode);
 
 end
 

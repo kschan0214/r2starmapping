@@ -37,7 +37,7 @@ function [r2s, t2s, m0] = R2starMacro(img,te,varargin)
 R2star_AddPath
 
 %% Parsing argument input flags
-[r2sMethod,piMethod,m0mode,mask,NUM_MAGN,isParallel]=parse_varargin_R2star(varargin);
+[r2sMethod,piMethod,s0mode,mask,NUM_MAGN,isParallel]=parse_varargin_R2star(varargin);
 
 if isempty(NUM_MAGN)
     NUM_MAGN = length(te);
@@ -47,13 +47,13 @@ disp(['Using algorithm: ' r2sMethod]);
 
 switch lower(r2sMethod)
     case 'arlo'
-        [r2s,t2s,m0] = R2star_ARLO_mag(img,te,m0mode);
+        [r2s,t2s,m0] = R2star_ARLO_mag(img,te,s0mode);
     case 'gs'
-        [r2s,t2s,m0] = R2star_GS(img,te,m0mode);
+        [r2s,t2s,m0] = R2star_GS(img,te,s0mode);
     case 'pi'
-        [r2s,t2s,m0] = R2star_pi(img,te,m0mode,piMethod);
+        [r2s,t2s,m0] = R2star_pi(img,te,s0mode,piMethod);
     case 'trapezoidal'
-        [r2s,t2s,m0] = R2star_trapezoidal(img,te,m0mode);
+        [r2s,t2s,m0] = R2star_trapezoidal(img,te,s0mode);
     case 'nlls'
         [r2s,t2s,m0] = R2star_NLLS(img,te,mask,isParallel,NUM_MAGN);
     case 'regression'
@@ -64,13 +64,13 @@ end
 
 %% Parsing varargin
 
-function [r2sMethod,piMethod,m0mode,mask,NUM_MAGN,isParallel]=parse_varargin_R2star(arg)
+function [r2sMethod,piMethod,s0mode,mask,NUM_MAGN,isParallel]=parse_varargin_R2star(arg)
 r2sMethod = 'trapezoidal';
 piMethod = 'interleaved';
 % default setting
 NUM_MAGN = [];
 mask = [];
-m0mode='default';
+s0mode='1stecho';
 isParallel = false;
 
 for kvar = 1:length(arg)
@@ -85,12 +85,16 @@ for kvar = 1:length(arg)
         mask = arg{kvar+1} > 0;
         continue
     end
-    if strcmpi(arg{kvar},'m0mode')
-        m0mode = arg{kvar+1};
+    if strcmpi(arg{kvar},'s0mode')
+        s0mode = arg{kvar+1};
         continue
     end
     if strcmpi(arg{kvar},'parallel')
-        isParallel = true;
+        isParallel = arg{kvar+1};
+        continue
+    end
+    if strcmpi(arg{kvar},'numMagn')
+        NUM_MAGN = arg{kvar+1};
         continue
     end
 end

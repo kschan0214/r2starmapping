@@ -22,7 +22,7 @@
 % Date created: July 17, 2016
 % Date last modified: 24 Sep 2017
 %
-function [r2s,t2s,m0] = R2star_NLLS(img,te,mask,isParallel,NUM_MAGN)
+function [r2s,t2s,s0] = R2star_NLLS(img,te,mask,isParallel,NUM_MAGN)
 
 % set range of R2* and T2*
 minT2s = min(te)/20;
@@ -41,7 +41,8 @@ if nargin<4
     isParallel = false;
 end
 
-if nargin<5
+% check if the input is real then switch to magnitude fitting
+if nargin<5 || isreal(img)
     NUM_MAGN = length(te);
 end
 
@@ -60,7 +61,7 @@ matrixSize = size(img);
 
 %% main
 % estimate initial guesses with fast method
-[r2s0,~,m00] = R2starmapping_trapezoidal(img,te);
+[r2s0,~,m00] = R2star_trapezoidal(img,te);
 
 % convert initial guesses to 1D array
 r2s0 = r2s0(:);
@@ -70,11 +71,11 @@ img = reshape(img,[numel(img)/matrixSize(end), matrixSize(end)]);
 
 % fitting algorithm parameters(boundaries)
 lb = double([ranger2s(1), abs(min(img(:)))]);
-ub = double([ranger2s(2), 2*max(img(:))*exp(maxR2s*min(te))]);
+ub = double([ranger2s(2), 2*max(img(:))*exp(ranger2s(2)*min(te))]);
 options = optimoptions(@lsqnonlin,'Display','off','MaxIter',100);
 
 r2s = zeros(size(r2s0));
-m0 = zeros(size(m00));
+s0 = zeros(size(m00));
 if isParallel
     parfor k = 1:length(r2s0)
         if mask(k)
@@ -86,10 +87,10 @@ if isParallel
 
             % get results
             r2s(k) = res(1);
-            m0(k) = res(2);
+            s0(k) = res(2);
         else
             r2s(k) = 0;
-            m0(k) = 0;
+            s0(k) = 0;
         end
     end
 %     catch
@@ -104,17 +105,17 @@ else
 
             % get results
             r2s(k) = res(1);
-            m0(k) = res(2);
+            s0(k) = res(2);
         else
             r2s(k) = 0;
-            m0(k) = 0;
+            s0(k) = 0;
         end
     end
 end
 
 %% reshape 1D results to images
 r2s = reshape(r2s,matrixSize(1:end-1));
-m0 = reshape(m0,matrixSize(1:end-1));
+s0 = reshape(s0,matrixSize(1:end-1));
 t2s = 1./r2s;
 t2s = SetImgRange(t2s,ranget2s);
 

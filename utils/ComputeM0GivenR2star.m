@@ -5,7 +5,7 @@
 %   r2s         : R2* map
 %   te          : echo times
 %   img         : multiecho images
-%   method      : 'default','weighted','average'
+%   method      : '1stecho','weighted','average'
 %
 % Output
 % --------------
@@ -25,7 +25,7 @@ matrixSize = size(img);
 ndim = ndims(img);
 
 switch lower(method)
-    case 'default'
+    case '1stecho'
         m0 = img(1:(numel(img)/matrixSize(end)))'.*exp(r2s(:)*te(1));
         if numel(m0) ~=1
             m0 = reshape(m0,matrixSize(1:end-1));

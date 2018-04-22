@@ -7,7 +7,12 @@ currDir = fileparts(fullName);
 addpath(currDir);
 
 % keep GUI and macro directories
-addpath([currDir filesep 'utils/']);
+utilsDir = [currDir filesep 'utils/'];
+addpath(utilsDir);
+addpath(genpath([utilsDir 'nifti/']));
+
+addpath([currDir filesep 'gui_func/']);
+
 addpath([currDir filesep 'lsq/']);
 addpath([currDir filesep 'ClosedFormSolution/']);
 

@@ -16,22 +16,22 @@
 % Date last modified:
 %
 %
-function [r2s,t2s,m0] = R2starmapping_CRSI(img,te,sigma,varargin)
-p = abs(img).^2;
+function [r2s,t2s,m0] = R2starmapping_CRSI(img,te,m0mode,sigma,m)
+
+% set range of R2* and T2*
+minT2s = min(te)/20;
+maxT2s = max(te)*20;
+ranget2s = [minT2s, maxT2s];
+ranger2s = [1/maxT2s, 1/minT2s];
+
+% set m0 extrapolation method
+if nargin < 3
+    m0mode = 'default';
+end
+
+% p = abs(img).^2;
+p = real(img).^2 + imag(img).^2;
 nTE = length(te);
-%% Parsing argument input flags
-[~,~,~,~,ranget2s,ranger2s,m0mode,~,m]=parse_varargin_R2star(varargin);
-if isempty(ranget2s)
-    minT2s = min(te)/20;
-    maxT2s = max(te)*20;
-    ranget2s = [minT2s, maxT2s];
-end
-if isempty(ranger2s)
-    minR2s = 1/(20*max(te));
-    maxR2s = 20/min(te);
-    ranger2s = [minR2s, maxR2s];
-end
-    
 
 A = 0;
 for n=1:nTE-1
@@ -52,6 +52,15 @@ t2s = SetImgRange(t2s,ranget2s);
 % calculate m0
 m0 = ComputeM0GivenR2star(r2s,te,img,m0mode);
 
+end
 
-
+%% uility function
+function res = SetImgRange(img,range)
+    imgMax = range(2);
+    imgMin = range(1);
+    img(img<imgMin) = imgMin;
+    img(img>imgMax) = imgMax;
+    img(isinf(img)) = imgMin;
+    img(isnan(img)) = imgMin;
+    res = img;
 end
