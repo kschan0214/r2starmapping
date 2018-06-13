@@ -41,10 +41,10 @@ rfig=figure('Units','pixels','position',[posLeft posBottom guiSizeHori guiSizeVe
     'MenuBar','None','Toolbar','None','Name','R2* mapping','NumberTitle','off');
 
 %% I/O panel
-rh = r2starGUI_handle_panel_dataIO(rfig,rfig,rh,[0.01 0.8]);
+rh = r2starGUI_handle_panel_dataIO(rfig,rfig,rh,[0.01 0.7]);
 
 %% R2* method panel
-rh = r2starGUI_handle_panel_r2sMethod(rfig,rfig,rh,[0.01 0.54]);
+rh = r2starGUI_handle_panel_r2sMethod(rfig,rfig,rh,[0.01 0.4]);
 
 %% Start button
 rh.pushbutton_start = uicontrol('Parent',rfig,'Style','pushbutton',...
@@ -60,12 +60,12 @@ end
 %% utils functions
 function h=SetAllCallbacks(h)
 
-set(h.dataIO.button.input,      'Callback',             {@ButtonOpen_Callback,'input'});
-set(h.dataIO.button.output,    	'Callback',             {@ButtonOpen_Callback,'output'});
-set(h.dataIO.button.maskdir,   	'Callback',             {@ButtonOpen_Callback,'mask'});
-set(h.dataIO.button.teFile,    	'Callback',             {@ButtonOpen_Callback,'te'});
-set(h.r2sMethod.popup.method,  	'Callback',             {@Popupr2sMethod_Callback});
-set(h.pushbutton_start,        	'Callback',             {@PushbuttonStart_Callback});
+set(h.dataIO.button.input,      'Callback', {@ButtonOpen_Callback,'input'});
+set(h.dataIO.button.output,    	'Callback', {@ButtonOpen_Callback,'output'});
+set(h.dataIO.button.maskdir,   	'Callback', {@ButtonOpen_Callback,'mask'});
+set(h.dataIO.button.teFile,    	'Callback', {@ButtonOpen_Callback,'te'});
+set(h.r2sMethod.popup.method,  	'Callback', {@Popupr2sMethod_Callback});
+set(h.pushbutton_start,        	'Callback', {@PushbuttonStart_Callback});
 
 end
 
