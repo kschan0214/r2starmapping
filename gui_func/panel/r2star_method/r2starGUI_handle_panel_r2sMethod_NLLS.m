@@ -1,0 +1,46 @@
+%% h = r2starGUI_handle_panel_r2sMethod_PI(hParent,h,position)
+%
+% Input
+% --------------
+% hParent       : parent handle of this panel
+% h             : global structure contains all handles
+% position      : position of this panel
+%
+% Output
+% --------------
+% h             : global structure contains all new and other handles
+%
+% Description: This GUI function creates a panel  
+%
+% Kwok-shing Chan @ DCCN
+% k.chan@donders.ru.nl
+% Date created: 12 June 2018
+% Date last modified: 
+%
+%
+function h = r2starGUI_handle_panel_r2sMethod_NLLS(hParent,h,position)
+
+%% Parent handle of panel
+h.r2sMethod.panel.NLLS = uipanel(hParent,...
+    'Title','Non-linear least square',...
+    'position',position,...
+    'backgroundcolor',get(h.fig,'color'),'Visible','off');
+    
+%% Children of Trapezoidal panel
+    h.r2sMethod.NLLS.text.fitType = uicontrol('Parent',h.r2sMethod.panel.NLLS,...
+        'Style','text',...
+        'String','Type of data fitting',...
+        'units','normalized','position',[0.01 0.75 0.3 0.2],...
+        'HorizontalAlignment','left',...
+        'backgroundcolor',get(h.fig,'color'));
+    h.r2sMethod.NLLS.popup.fitType = uicontrol('Parent',h.r2sMethod.panel.NLLS,...
+        'Style','popup',...
+        'String',{'Magnitude','Complex','Mixed'},...
+        'units','normalized','position',[0.31 0.75 0.2 0.2]) ;
+
+    h.r2sMethod.NLLS.checkbox.isParallel = uicontrol('Parent',h.r2sMethod.panel.NLLS,...
+        'Style','checkbox',...
+        'String','Enable parallel computing (parfor)',...
+        'units','normalized','position',[0.01 0.5 0.98 0.2]);
+    
+end

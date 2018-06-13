@@ -37,20 +37,20 @@ if guiSizeVert < 350
 end
 
 % create GUI 
-rfig=figure('Units','pixels','position',[posLeft posBottom guiSizeHori guiSizeVert],...
+rh.fig=figure('Units','pixels','position',[posLeft posBottom guiSizeHori guiSizeVert],...
     'MenuBar','None','Toolbar','None','Name','R2* mapping','NumberTitle','off');
 
 %% I/O panel
-rh = r2starGUI_handle_panel_dataIO(rfig,rfig,rh,[0.01 0.7]);
+rh = r2starGUI_handle_panel_dataIO(rh.fig,rh,[0.01 0.7]);
 
 %% R2* method panel
-rh = r2starGUI_handle_panel_r2sMethod(rfig,rfig,rh,[0.01 0.4]);
+rh = r2starGUI_handle_panel_r2sMethod(rh.fig,rh,[0.01 0.4]);
 
 %% Start button
-rh.pushbutton_start = uicontrol('Parent',rfig,'Style','pushbutton',...
+rh.pushbutton_start = uicontrol('Parent',rh.fig,'Style','pushbutton',...
     'String','Start',...
     'units','normalized','Position',[0.85 0.01 0.1 0.05],...
-    'backgroundcolor',get(rfig,'color'));
+    'backgroundcolor',get(rh.fig,'color'));
 
 %% Set Callback functions
 rh = SetAllCallbacks(rh);
