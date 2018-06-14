@@ -1,9 +1,9 @@
-%% [r2s,t2s,s0] = R2starMacroIOWrapper(inputFullname,outputDir,te,varargin)
+%% [r2s,t2s,s0] = R2starMacroIOWrapper(inputFullname,output,te,varargin)
 %
 % Input
 % --------------
 % inputFullname : input NIfTI files 
-% outputDir    	: output directory that stores the output (R2* map and S0 image)
+% output    	: output directory with output basename (R2* map and S0 image)
 % varargin ('Name','Value' pair)
 % ---------
 % 'mask'      	: mask file (in NIfTI format) full name 
@@ -26,15 +26,21 @@
 % Kwok-shing Chan @ DCCN
 % k.chan@donders.ru.nl
 % Date created: 21 April 2018
-% Date last modified:
+% Date last modified: 14 June 2018
 %
 %
-function [r2s,t2s,s0] = R2starMacroIOWrapper(inputFullname,outputDir,te,varargin)
+function [r2s,t2s,s0] = R2starMacroIOWrapper(inputFullname,output,te,varargin)
 
 %% define variables
 prefix = 'squirrel_';
 
-%% Check output directory exist or not
+%% Check if output directory exists 
+output_index = strfind(output, filesep);
+outputDir = output(1:output_index(end));
+if ~isempty(output(output_index(end)+1:end))
+    prefix = [output(output_index(end)+1:end) '_'];
+end
+
 if exist(outputDir,'dir') ~= 7
     % if not then create the directory
     mkdir(outputDir);
@@ -72,10 +78,6 @@ gre = double(inputGRENifti.img);
 % store the header the NIfTI files, all following results will have
 % the same header
 outputNiftiTemplate = inputGRENifti;
-% make sure the class of output datatype is double
-outputNiftiTemplate.hdr.dime.datatype = 64;
-% remove the time dimension info
-outputNiftiTemplate.hdr.dime.dim(5) = 1;
 
 %% get mask (optional)
 mask = [];
@@ -100,15 +102,15 @@ end
 %% save results
 disp('Saving R2* map and S0 image ...');
 
-nii_r2s = make_nii_quick(outputNiftiTemplate,r2s);
-nii_s0  = make_nii_quick(outputNiftiTemplate,s0);
-save_untouch_nii(nii_r2s,   [outputDir filesep prefix 'r2s.nii.gz']);
-save_untouch_nii(nii_s0,    [outputDir filesep prefix 's0.nii.gz']);
+save_nii_quick(outputNiftiTemplate,r2s,	[outputDir filesep prefix 'r2s.nii.gz']);
+save_nii_quick(outputNiftiTemplate,t2s,	[outputDir filesep prefix 't2s.nii.gz']);
+save_nii_quick(outputNiftiTemplate,s0,  [outputDir filesep prefix 's0.nii.gz']);
 
 disp('Done!');
 
 end
 
+%% parse input argument
 function [maskFullname,method,PImethod,s0mode,fitType,isParallel]=parse_varargin(arg)
 maskFullname = [];
 method = 'trapezoidal';
@@ -140,11 +142,4 @@ if ~isempty(arg)
     end
 end
 
-end
-
-% handy function to save result to nifti format
-function nii = make_nii_quick(template,img)
-    nii = template;
-    nii.img = img;
-    nii.hdr.dime.datatype = 64;
 end
