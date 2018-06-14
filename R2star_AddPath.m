@@ -11,7 +11,7 @@ utilsDir = [currDir filesep 'utils/'];
 addpath(utilsDir);
 addpath(genpath([utilsDir 'nifti/']));
 
-addpath([currDir filesep 'gui_func/']);
+addpath(genpath([currDir filesep 'gui_func/']));
 
 addpath([currDir filesep 'lsq/']);
 addpath([currDir filesep 'ClosedFormSolution/']);
