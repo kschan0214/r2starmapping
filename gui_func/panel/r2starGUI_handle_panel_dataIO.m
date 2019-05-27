@@ -15,7 +15,8 @@
 % Kwok-shing Chan @ DCCN
 % k.chan@donders.ru.nl
 % Date created: 21 April 2018
-% Date last modified: 14 June 2018
+% Date modified: 14 June 2018
+% Date modified: 27 May 2019
 %
 %
 function h = r2starGUI_handle_panel_dataIO(hParent,h,position)
@@ -89,7 +90,7 @@ h.StepsPanel.dataIO = uipanel(hParent,...
         'units','normalized','Position',[0.01 0.32 0.2 0.15],...
         'HorizontalAlignment','left',...
         'backgroundcolor',get(h.fig,'color'),...
-        'tooltip','Use FSL brain extraction (bet)');
+        'tooltip','txt');
     h.dataIO.edit.teFile = uicontrol('Parent',h.StepsPanel.dataIO,...
         'Style','edit',...
         'units','normalized','position',[0.21 0.32 0.68 0.15],...
@@ -133,11 +134,21 @@ prefix = 'squirrel';
 switch field
     case 'te'
         % te file can be text file or mat file
-        [tefileName,pathDir] = uigetfile({'*.mat;*.txt'},'Select TE file');
+        [tefileName,pathDir] = uigetfile({'*.mat;*.txt;*.json'},'Select TE file','MultiSelect','on');
+        
+        fullname = [];
+        if iscell(tefileName)
+            for kf = 1:length(tefileName)
+                fullname = [fullname, fullfile(pathDir,tefileName{kf}) ';'];
+            end
+        else
+            fullname = fullfile(pathDir,tefileName);
+        end
         
         % display file directory
         if pathDir ~= 0
-            set(h.dataIO.edit.teFile,'String',fullfile(pathDir,tefileName));
+            set(h.dataIO.edit.teFile,'String',fullname);
+            set(h.dataIO.edit.userTE,'String','[]');
         end
 
     case 'mask'

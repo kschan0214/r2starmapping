@@ -34,7 +34,7 @@
 % Date last modified: 24 September 2017
 %
 function [r2s, t2s, m0] = R2starMacro(img,te,varargin)
-R2star_AddPath
+r2star_addpath
 
 %% Parsing argument input flags
 [r2sMethod,piMethod,s0mode,mask,NUM_MAGN,isParallel]=parse_varargin_R2star(varargin);

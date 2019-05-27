@@ -73,9 +73,9 @@ else
         end
     end
 end
+r2s = SetImgRange(r2s,ranger2s);
 t2s = 1./r2s;
 t2s = SetImgRange(t2s,ranget2s);
-r2s = SetImgRange(r2s,ranger2s);
 end
 
 %% uility function
