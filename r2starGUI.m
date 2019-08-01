@@ -152,7 +152,7 @@ switch r2starMethod
             get(h.r2sMethod.NLLS.checkbox.isParallel,'Value'));
 end
 
-fprintf(fid,'\nR2starIOWrapper(input,output_basename,mask_filename,algorParam);\n');
+fprintf(fid,'\nR2starMacroIOWrapper(input,output_basename,mask_filename,algorParam);\n');
 
 fclose(fid);
 

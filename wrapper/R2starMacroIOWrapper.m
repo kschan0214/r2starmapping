@@ -29,7 +29,7 @@
 % Date modified: 14 June 2018
 % Date modified: 27 May 2019
 %
-function R2starIOWrapper(input,output,mask_filename,algorParam)
+function R2starMacroIOWrapper(input,output,mask_filename,algorParam)
 
 %% define variables
 prefix = 'squirrel_';

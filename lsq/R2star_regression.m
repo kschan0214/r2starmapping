@@ -46,33 +46,38 @@ x = ones(nt,2);
 x(:,2) = -te(:);
 y = permute(log(abs(img)),[4 1 2 3]);
 
-r2s = zeros(nx,ny,nz);
-m0 = zeros(nx,ny,nz);
-if isParallel
-    for kz=1:nz
-        for ky=1:ny
-            parfor kx=1:nx
-                if mask(kx,ky,kz)==1
-                    b = x\y(:,kx,ky,kz);
-                    r2s(kx,ky,kz) = b(2);
-                    m0(kx,ky,kz) = exp(b(1));
-                end
-            end
-        end
-    end
-else
-    for kz=1:nz
-        for ky=1:ny
-            for kx=1:nx
-                if mask(kx,ky,kz)==1
-                    b = x\y(:,kx,ky,kz);
-                    r2s(kx,ky,kz) = b(2);
-                    m0(kx,ky,kz) = exp(b(1));
-                end
-            end
-        end
-    end
-end
+y = reshape(y,[size(y,1) numel(y)/size(y,1)]);
+b = x\y;
+r2s = reshape( b(2,:),nx,ny,nz) .* mask;
+m0 = exp(reshape( b(1,:),nx,ny,nz)) .* mask;
+
+% r2s = zeros(nx,ny,nz);
+% m0 = zeros(nx,ny,nz);
+% if isParallel
+%     for kz=1:nz
+%         for ky=1:ny
+%             parfor kx=1:nx
+%                 if mask(kx,ky,kz)==1
+%                     b = x\y(:,kx,ky,kz);
+%                     r2s(kx,ky,kz) = b(2);
+%                     m0(kx,ky,kz) = exp(b(1));
+%                 end
+%             end
+%         end
+%     end
+% else
+%     for kz=1:nz
+%         for ky=1:ny
+%             for kx=1:nx
+%                 if mask(kx,ky,kz)==1
+%                     b = x\y(:,kx,ky,kz);
+%                     r2s(kx,ky,kz) = b(2);
+%                     m0(kx,ky,kz) = exp(b(1));
+%                 end
+%             end
+%         end
+%     end
+% end
 r2s = SetImgRange(r2s,ranger2s);
 t2s = 1./r2s;
 t2s = SetImgRange(t2s,ranget2s);
