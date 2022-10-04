@@ -1,4 +1,4 @@
-function R2star_AddPath
+function R2star_addpath
 
 % get the full path of this file
 fullName = mfilename('fullpath');
